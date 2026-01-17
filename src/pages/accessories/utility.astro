@@ -1,0 +1,85 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { accessoriesProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+
+// Filter for utility accessories
+const utilityAccessories = accessoriesProducts.filter((product) =>
+	["Wallets", "Keychains", "Umbrellas"].includes(product.category),
+);
+
+const utilityCategories = [
+	{ name: "All", count: utilityAccessories.length.toString(), active: true },
+	{ name: "Wallets", count: "5", active: false },
+	{ name: "Keychains", count: "5", active: false },
+	{ name: "Umbrellas", count: "5", active: false },
+];
+---
+
+<Layout title="Utility Accessories - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50"
+	>
+		<!-- Hero Banner -->
+		<section class="relative bg-blue-900 text-white py-20 overflow-hidden">
+			<div
+				class="absolute inset-0 bg-[repeating-linear-gradient(45deg,_transparent_25%,_rgba(255,255,255,0.02)_25%,_rgba(255,255,255,0.02)_50%,_transparent_50%,_transparent_75%,_rgba(255,255,255,0.02)_75%)] bg-[length:60px_60px]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(59,130,246,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-tools text-4xl text-blue-300"></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Utility Accessories
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-blue-200 mb-8 font-light"
+					>
+						Practical accessories that combine functionality with
+						style for everyday use
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Everyday Essentials
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						Discover practical accessories designed to make your
+						daily life easier and more organized
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={utilityAccessories}
+					categories={utilityCategories}
+					colorScheme="blue"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

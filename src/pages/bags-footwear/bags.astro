@@ -1,0 +1,97 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { bagsFootwearProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+
+// Filter for bags only
+const bagsProducts = bagsFootwearProducts.filter((product) =>
+	[
+		"Tote Bags",
+		"Sling Bags",
+		"Backpacks",
+		"Handbags",
+		"Men's Bags",
+		"Luggage",
+	].includes(product.category),
+);
+
+const bagsCategories = [
+	{ name: "All", count: bagsProducts.length.toString(), active: true },
+	{ name: "Tote Bags", count: "5", active: false },
+	{ name: "Sling Bags", count: "5", active: false },
+	{ name: "Backpacks", count: "5", active: false },
+	{ name: "Handbags", count: "5", active: false },
+	{ name: "Men's Bags", count: "5", active: false },
+	{ name: "Luggage", count: "5", active: false },
+];
+---
+
+<Layout title="Bags Collection - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50"
+	>
+		<!-- Hero Banner -->
+		<section class="relative bg-teal-900 text-white py-20 overflow-hidden">
+			<div
+				class="absolute inset-0 bg-[repeating-linear-gradient(135deg,_transparent,_transparent_30px,_rgba(255,255,255,0.03)_30px,_rgba(255,255,255,0.03)_60px)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(20,184,166,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i
+								class="fas fa-shopping-bag text-4xl text-teal-300"
+							></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Bags Collection
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-teal-200 mb-8 font-light"
+					>
+						Discover the perfect bag for every occasion, from
+						everyday essentials to travel companions
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Style Meets Function
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						From trendy totes to professional briefcases, find bags
+						that complement your lifestyle
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={bagsProducts}
+					categories={bagsCategories}
+					colorScheme="teal"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

@@ -1,0 +1,69 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+	class="bg-gradient-to-r from-slate-800 to-slate-700 text-slate-200 py-12 mt-16"
+>
+	<div class="container mx-auto px-4">
+		<div
+			class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-white/10"
+		>
+			<div class="space-y-6">
+				<h3
+					class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+				>
+					Clothify
+				</h3>
+				<p class="text-slate-400 leading-relaxed max-w-md">
+					Your premier B2B fashion supplier with high-quality apparel
+					for retailers.
+				</p>
+				<div class="flex space-x-4">
+					<a
+						href="#"
+						class="w-11 h-11 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
+					>
+						<i class="fab fa-facebook-f"></i>
+					</a>
+					<a
+						href="#"
+						class="w-11 h-11 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
+					>
+						<i class="fab fa-instagram"></i>
+					</a>
+					<a
+						href="#"
+						class="w-11 h-11 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/30 transition-all duration-300"
+					>
+						<i class="fab fa-linkedin-in"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="space-y-6">
+				<h3 class="text-xl font-bold text-white">Get in Touch</h3>
+				<div class="space-y-4">
+					<div
+						class="flex items-center space-x-4 text-slate-400 hover:text-white transition-colors"
+					>
+						<i class="fas fa-envelope text-primary w-5"></i>
+						<span>b2b@clothify.com</span>
+					</div>
+					<div
+						class="flex items-center space-x-4 text-slate-400 hover:text-white transition-colors"
+					>
+						<i class="fas fa-phone-alt text-primary w-5"></i>
+						<span>+1 (555) 123-4567</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="pt-8 text-center">
+			<div class="text-slate-500 text-sm">
+				&copy; {currentYear} Clothify B2B. All rights reserved.
+			</div>
+		</div>
+	</div>
+</footer>

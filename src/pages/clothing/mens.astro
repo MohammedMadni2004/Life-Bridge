@@ -1,0 +1,62 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { mensProducts, mensCategories } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Men's Fashion - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50"
+	>
+		<!-- Hero Banner -->
+		<section class="relative bg-slate-900 text-white py-20 overflow-hidden">
+			<div
+				class="absolute inset-0 bg-[linear-gradient(45deg,_transparent_25%,_rgba(255,255,255,0.02)_25%,_rgba(255,255,255,0.02)_50%,_transparent_50%,_transparent_75%,_rgba(255,255,255,0.02)_75%)] bg-[length:60px_60px]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(59,130,246,0.1)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-male text-4xl text-blue-400"></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Men's Collection
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-slate-300 mb-8 font-light"
+					>
+						Sophisticated styles and premium quality for the modern
+						gentleman
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={mensProducts}
+					categories={mensCategories}
+					colorScheme="blue"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

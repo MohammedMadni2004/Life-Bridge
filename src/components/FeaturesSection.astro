@@ -1,0 +1,64 @@
+---
+import { Card, CardContent } from "./ui/card";
+
+const features = [
+	{
+		icon: "fa-solid fa-box",
+		title: "Bulk Orders",
+		description:
+			"Order in volume with tiered pricing and customizable minimums for businesses of all sizes.",
+	},
+	{
+		icon: "fa-solid fa-globe",
+		title: "Global Shipping",
+		description:
+			"Fast and reliable international shipping with real-time tracking and customs assistance.",
+	},
+	{
+		icon: "fa-solid fa-tags",
+		title: "Wholesale Pricing",
+		description:
+			"Competitive rates with volume-based discounts to maximize your profit margins.",
+	},
+	{
+		icon: "fa-solid fa-shirt",
+		title: "Quality Assurance",
+		description:
+			"Rigorous quality control process ensures all garments meet international standards.",
+	},
+];
+---
+
+<section class="py-20 bg-muted/50">
+	<div class="container mx-auto px-4">
+		<div class="text-center mb-12">
+			<h2 class="text-3xl md:text-4xl font-bold text-foreground mb-2">
+				Why Choose Clothify B2B
+			</h2>
+			<p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+				We partner with retailers worldwide to provide quality apparel
+				at competitive prices
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+			{
+				features.map((feature) => (
+					<Card className="group bg-card p-8 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 text-center">
+						<CardContent>
+							<div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary text-white text-2xl flex items-center justify-center rounded-full mx-auto mb-6">
+								<i class={feature.icon} />
+							</div>
+							<h3 class="text-xl font-semibold text-foreground mb-3">
+								{feature.title}
+							</h3>
+							<p class="text-muted-foreground leading-relaxed">
+								{feature.description}
+							</p>
+						</CardContent>
+					</Card>
+				))
+			}
+		</div>
+	</div>
+</section>

@@ -1,0 +1,86 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { homeKitchenProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+
+// Filter for home essentials
+const homeProducts = homeKitchenProducts.filter((product) =>
+	["Storage", "Bathroom", "Decor", "Baby Utility"].includes(product.category),
+);
+
+const homeCategories = [
+	{ name: "All", count: homeProducts.length.toString(), active: true },
+	{ name: "Storage", count: "5", active: false },
+	{ name: "Bathroom", count: "5", active: false },
+	{ name: "Decor", count: "5", active: false },
+	{ name: "Baby Utility", count: "5", active: false },
+];
+---
+
+<Layout title="Home Essentials - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50"
+	>
+		<!-- Hero Banner -->
+		<section class="relative bg-green-900 text-white py-20 overflow-hidden">
+			<div
+				class="absolute inset-0 bg-[repeating-linear-gradient(45deg,_transparent,_transparent_40px,_rgba(255,255,255,0.02)_40px,_rgba(255,255,255,0.02)_80px)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,_rgba(34,197,94,0.12)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-home text-4xl text-green-300"></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Home Essentials
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-green-200 mb-8 font-light"
+					>
+						Create a beautiful and organized home with our carefully
+						curated essentials
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Transform Your Living Space
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						From storage solutions to bathroom accessories, discover
+						everything you need for a well-organized home
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={homeProducts}
+					categories={homeCategories}
+					colorScheme="green"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

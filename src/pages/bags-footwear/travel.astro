@@ -1,0 +1,86 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { bagsFootwearProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+
+// Filter for travel/luggage items
+const travelProducts = bagsFootwearProducts.filter(
+	(product) => product.category === "Luggage",
+);
+
+const travelCategories = [
+	{ name: "All", count: travelProducts.length.toString(), active: true },
+	{ name: "Luggage", count: "5", active: false },
+];
+---
+
+<Layout title="Travel Luggage - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50"
+	>
+		<!-- Hero Banner -->
+		<section
+			class="relative bg-indigo-900 text-white py-20 overflow-hidden"
+		>
+			<div
+				class="absolute inset-0 bg-[repeating-conic-gradient(from_15deg_at_center,_transparent_0deg,_rgba(255,255,255,0.02)_30deg,_transparent_60deg,_rgba(255,255,255,0.02)_90deg)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,_rgba(99,102,241,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-suitcase text-4xl text-indigo-300"
+							></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Travel Luggage
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-indigo-200 mb-8 font-light"
+					>
+						Premium luggage and travel essentials for your journeys
+						around the world
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Travel in Style
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						Durable and stylish luggage designed to accompany you on
+						every adventure
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={travelProducts}
+					categories={travelCategories}
+					colorScheme="indigo"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

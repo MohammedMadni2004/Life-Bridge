@@ -1,0 +1,113 @@
+---
+import { ProductCard } from "@/components/ProductCard";
+import { Button } from "./ui/button";
+
+const products = [
+	{
+		id: "p001",
+		name: "Classic Cotton T-Shirt",
+		category: "Men's Apparel",
+		price: 8.5,
+		minOrder: 50,
+		imageUrl:
+			"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80",
+	},
+	{
+		id: "p002",
+		name: "Premium UV Protection Sunglasses",
+		category: "Accessories",
+		price: 89.99,
+		minOrder: 6,
+		imageUrl:
+			"https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
+	},
+	{
+		id: "p003",
+		name: "Leather Tote Bag",
+		category: "Bags",
+		price: 129.99,
+		minOrder: 4,
+		imageUrl:
+			"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
+	},
+	{
+		id: "p004",
+		name: "Custom Branded Ceramic Mug",
+		category: "Corporate Gifts",
+		price: 24.99,
+		minOrder: 20,
+		imageUrl:
+			"https://images.unsplash.com/photo-1514228742587-6b1558fcf93e?w=400&h=400&fit=crop",
+	},
+	{
+		id: "p005",
+		name: "Ceramic Coffee Cup Set",
+		category: "Home & Kitchen",
+		price: 39.99,
+		minOrder: 8,
+		imageUrl:
+			"https://images.unsplash.com/photo-1514228742587-6b1558fcf93e?w=400&h=400&fit=crop",
+	},
+	{
+		id: "p007",
+		name: "Men's Running Shoes",
+		category: "Footwear",
+		price: 89.99,
+		minOrder: 5,
+		imageUrl:
+			"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop",
+	},
+	{
+		id: "p008",
+		name: "Summer Floral Dress",
+		category: "Women's Apparel",
+		price: 15.5,
+		minOrder: 25,
+		imageUrl:
+			"https://images.unsplash.com/photo-1572804013427-4d7ca7268217?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1365&q=80",
+	},
+];
+
+interface Props {
+	title: string;
+	subtitle?: string;
+}
+
+const { title, subtitle } = Astro.props;
+---
+
+<section class="py-16">
+	<div class="container mx-auto px-4">
+		<div class="text-center mb-12">
+			<h2 class="text-3xl md:text-4xl font-bold text-foreground mb-2">
+				{title}
+			</h2>
+			{
+				subtitle && (
+					<p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+						{subtitle}
+					</p>
+				)
+			}
+		</div>
+
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+			{
+				products.map((product) => (
+					<ProductCard product={product} client:load />
+				))
+			}
+		</div>
+
+		<div class="text-center">
+			<Button
+				variant="outline"
+				size="lg"
+				className="rounded-full px-8"
+				client:load
+			>
+				View All Products
+			</Button>
+		</div>
+	</div>
+</section>

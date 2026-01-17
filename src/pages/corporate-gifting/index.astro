@@ -1,0 +1,106 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import {
+	corporateGiftingCategories,
+	corporateGiftingProducts,
+} from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Corporate Gifting - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-slate-50"
+	>
+		<!-- Hero Banner -->
+		<section class="relative bg-gray-900 text-white py-20 overflow-hidden">
+			<div
+				class="absolute inset-0 bg-[repeating-conic-gradient(from_15deg_at_center,_transparent_0deg,_rgba(255,255,255,0.02)_30deg,_transparent_60deg,_rgba(255,255,255,0.02)_90deg)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,_rgba(75,85,99,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<!-- Decorative Images -->
+			<div
+				class="absolute right-14 top-16 w-28 h-28 opacity-15 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200&h=200&fit=crop"
+					alt="Corporate Gifts"
+					class="w-full h-full object-cover rounded-full border-4 border-white/20"
+				/>
+			</div>
+			<div
+				class="absolute left-14 bottom-14 w-24 h-24 opacity-15 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1514228742587-6b1558fcf93e?w=200&h=200&fit=crop"
+					alt="Custom Drinkware"
+					class="w-full h-full object-cover rounded-full border-4 border-white/20"
+				/>
+			</div>
+			<div
+				class="absolute right-20 bottom-12 w-20 h-20 opacity-10 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200&h=200&fit=crop"
+					alt="Branded Apparel"
+					class="w-full h-full object-cover rounded-full border-3 border-white/15"
+				/>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-briefcase text-4xl text-gray-300"
+							></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Corporate Gifting
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-gray-300 mb-8 font-light"
+					>
+						Elevate your brand with premium corporate gifts and
+						custom merchandise that leave a lasting impression
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Professional Gift Solutions
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						Strengthen business relationships with thoughtfully
+						curated corporate gifts, branded merchandise, and custom
+						solutions
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={corporateGiftingProducts}
+					categories={corporateGiftingCategories}
+					colorScheme="gray"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

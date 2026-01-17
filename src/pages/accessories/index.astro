@@ -1,0 +1,104 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { accessoriesCategories, accessoriesProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Accessories - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50"
+	>
+		<!-- Hero Banner -->
+		<section
+			class="relative bg-purple-900 text-white py-20 overflow-hidden"
+		>
+			<div
+				class="absolute inset-0 bg-[repeating-conic-gradient(from_0deg_at_50%_50%,_transparent_0deg,_rgba(255,255,255,0.03)_45deg,_transparent_90deg,_rgba(255,255,255,0.03)_135deg)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,_rgba(139,69,193,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<!-- Decorative Images -->
+			<div
+				class="absolute right-16 top-16 w-24 h-24 opacity-15 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop"
+					alt="Accessories"
+					class="w-full h-full object-cover rounded-full border-3 border-white/20"
+				/>
+			</div>
+			<div
+				class="absolute left-16 bottom-12 w-20 h-20 opacity-15 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=200&h=200&fit=crop"
+					alt="Jewelry"
+					class="w-full h-full object-cover rounded-full border-3 border-white/15"
+				/>
+			</div>
+			<div
+				class="absolute right-24 bottom-20 w-16 h-16 opacity-10 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1541123603104-512919d6a96c?w=200&h=200&fit=crop"
+					alt="Belts"
+					class="w-full h-full object-cover rounded-full border-2 border-white/10"
+				/>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-gem text-4xl text-purple-300"></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Accessories Collection
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-purple-200 mb-8 font-light"
+					>
+						Complete your look with our stunning range of fashion
+						and utility accessories
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Fashion & Utility Accessories
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						From trendy sunglasses to practical wallets, discover
+						accessories that add style and function to your everyday
+						life
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={accessoriesProducts}
+					categories={accessoriesCategories}
+					colorScheme="purple"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

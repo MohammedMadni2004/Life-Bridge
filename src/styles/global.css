@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* LifeBridge Guidance Theme - Calm, serene blue palette */
+:root {
+  /* Primary colors - Muted Steel Blue tones */
+  --slate-blue: #4a6b8a;
+  --slate-blue-dark: #3a5570;
+  --slate-blue-light: #6a8baa;
+
+  /* Background colors */
+  --bg-cream: #f5f7f9;
+  --bg-white: #ffffff;
+  --bg-mist: #e8eef4;
+  --bg-fog: #dce5ed;
+
+  /* Text colors */
+  --text-dark: #2c3e50;
+  --text-medium: #4a5568;
+  --text-light: #718096;
+  --text-muted: #a0aec0;
+
+  /* Accent colors */
+  --accent-teal: #5a8f9a;
+  --accent-gold: #c9a962;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 20px rgba(74, 107, 138, 0.1);
+  --shadow-medium: 0 8px 30px rgba(74, 107, 138, 0.15);
+
+  /* Tailwind CSS variables */
+  --background: #f5f7f9;
+  --foreground: #2c3e50;
+  --card: #ffffff;
+  --card-foreground: #2c3e50;
+  --popover: #ffffff;
+  --popover-foreground: #2c3e50;
+  --primary: #4a6b8a;
+  --primary-foreground: #ffffff;
+  --secondary: #e8eef4;
+  --secondary-foreground: #2c3e50;
+  --muted: #dce5ed;
+  --muted-foreground: #718096;
+  --accent: #5a8f9a;
+  --accent-foreground: #ffffff;
+  --destructive: #e53e3e;
+  --destructive-foreground: #ffffff;
+  --border: #d1dce5;
+  --input: #e8eef4;
+  --ring: #4a6b8a;
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Custom colors for the theme */
+  --color-slate-blue: var(--slate-blue);
+  --color-slate-blue-dark: var(--slate-blue-dark);
+  --color-slate-blue-light: var(--slate-blue-light);
+  --color-bg-cream: var(--bg-cream);
+  --color-bg-mist: var(--bg-mist);
+  --color-bg-fog: var(--bg-fog);
+  --color-text-dark: var(--text-dark);
+  --color-text-medium: var(--text-medium);
+  --color-text-light: var(--text-light);
+  --color-text-muted: var(--text-muted);
+  --color-accent-teal: var(--accent-teal);
+  --color-accent-gold: var(--accent-gold);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Lato", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 500;
+  }
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animation-delay-100 {
+  animation-delay: 100ms;
+}
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
+/* Calendly button styling */
+.calendly-popup-button {
+  @apply cursor-pointer transition-all duration-300;
+}
+
+.calendly-popup-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Gradient overlays */
+.gradient-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 247, 249, 0.9) 0%,
+    rgba(245, 247, 249, 0.7) 50%,
+    rgba(245, 247, 249, 0.95) 100%
+  );
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-mist);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--slate-blue-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--slate-blue);
+}

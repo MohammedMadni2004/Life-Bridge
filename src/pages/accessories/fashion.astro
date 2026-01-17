@@ -1,0 +1,91 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { accessoriesProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+
+// Filter for fashion accessories
+const fashionAccessories = accessoriesProducts.filter((product) =>
+	["Sunglasses", "Jewelry", "Hair Accessories", "Belts", "Earmuffs"].includes(
+		product.category,
+	),
+);
+
+const fashionCategories = [
+	{ name: "All", count: fashionAccessories.length.toString(), active: true },
+	{ name: "Sunglasses", count: "5", active: false },
+	{ name: "Jewelry", count: "5", active: false },
+	{ name: "Hair Accessories", count: "5", active: false },
+	{ name: "Belts", count: "5", active: false },
+	{ name: "Earmuffs", count: "5", active: false },
+];
+---
+
+<Layout title="Fashion Accessories - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-indigo-50"
+	>
+		<!-- Hero Banner -->
+		<section
+			class="relative bg-purple-900 text-white py-20 overflow-hidden"
+		>
+			<div
+				class="absolute inset-0 bg-[repeating-conic-gradient(from_0deg_at_50%_50%,_transparent_0deg,_rgba(255,255,255,0.03)_45deg,_transparent_90deg,_rgba(255,255,255,0.03)_135deg)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,_rgba(139,69,193,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i class="fas fa-gem text-4xl text-purple-300"></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Fashion Accessories
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-purple-200 mb-8 font-light"
+					>
+						Elevate your style with our stunning collection of
+						fashion accessories
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Statement Fashion Pieces
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						From designer sunglasses to elegant jewelry, discover
+						accessories that make a statement
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={fashionAccessories}
+					categories={fashionCategories}
+					colorScheme="purple"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

@@ -1,0 +1,87 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { bagsFootwearProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+
+// Filter for footwear only
+const footwearProducts = bagsFootwearProducts.filter(
+	(product) => product.category === "Footwear",
+);
+
+const footwearCategories = [
+	{ name: "All", count: footwearProducts.length.toString(), active: true },
+	{ name: "Footwear", count: "10", active: false },
+];
+---
+
+<Layout title="Footwear Collection - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50"
+	>
+		<!-- Hero Banner -->
+		<section
+			class="relative bg-orange-900 text-white py-20 overflow-hidden"
+		>
+			<div
+				class="absolute inset-0 bg-[repeating-linear-gradient(90deg,_transparent,_transparent_50px,_rgba(255,255,255,0.02)_50px,_rgba(255,255,255,0.02)_100px)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_25%_75%,_rgba(234,88,12,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i
+								class="fas fa-shoe-prints text-4xl text-orange-300"
+							></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Footwear Collection
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-orange-200 mb-8 font-light"
+					>
+						Step into comfort and style with our diverse range of
+						footwear for every occasion
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Every Step Matters
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						From casual sneakers to formal shoes, find the perfect
+						footwear for men, women, and kids
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={footwearProducts}
+					categories={footwearCategories}
+					colorScheme="orange"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

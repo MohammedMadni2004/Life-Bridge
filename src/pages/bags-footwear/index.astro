@@ -1,0 +1,103 @@
+---
+import { FilterableProductGrid } from "../../components/FilterableProductGrid";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import { bagsFootwearCategories, bagsFootwearProducts } from "../../constants";
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Bags & Footwear - ShopVerse">
+	<Header />
+
+	<main
+		class="min-h-screen bg-gradient-to-br from-teal-50 via-white to-cyan-50"
+	>
+		<!-- Hero Banner -->
+		<section class="relative bg-teal-900 text-white py-20 overflow-hidden">
+			<div
+				class="absolute inset-0 bg-[repeating-linear-gradient(135deg,_transparent,_transparent_30px,_rgba(255,255,255,0.03)_30px,_rgba(255,255,255,0.03)_60px)]"
+			>
+			</div>
+			<div
+				class="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,_rgba(20,184,166,0.15)_0%,_transparent_70%)]"
+			>
+			</div>
+			<!-- Decorative Images -->
+			<div
+				class="absolute right-12 top-14 w-28 h-28 opacity-15 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=200&fit=crop"
+					alt="Bags"
+					class="w-full h-full object-cover rounded-full border-4 border-white/20"
+				/>
+			</div>
+			<div
+				class="absolute left-14 bottom-16 w-24 h-24 opacity-15 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&h=200&fit=crop"
+					alt="Footwear"
+					class="w-full h-full object-cover rounded-full border-4 border-white/20"
+				/>
+			</div>
+			<div
+				class="absolute right-20 bottom-8 w-20 h-20 opacity-10 hidden lg:block"
+			>
+				<img
+					src="https://images.unsplash.com/photo-1565026057447-bc90ecd8b645?w=200&h=200&fit=crop"
+					alt="Luggage"
+					class="w-full h-full object-cover rounded-full border-3 border-white/15"
+				/>
+			</div>
+			<div class="container mx-auto px-4 relative z-10">
+				<div class="max-w-4xl mx-auto text-center">
+					<div class="flex justify-center mb-6">
+						<div
+							class="bg-white/5 backdrop-blur-sm rounded-full p-6 border border-white/10"
+						>
+							<i
+								class="fas fa-shopping-bag text-4xl text-teal-300"
+							></i>
+						</div>
+					</div>
+					<h1 class="text-5xl md:text-7xl font-bold mb-6 text-white">
+						Bags & Footwear
+					</h1>
+					<p
+						class="text-xl md:text-2xl text-teal-200 mb-8 font-light"
+					>
+						Step out in style with our comprehensive collection of
+						bags, shoes, and travel essentials
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<!-- Products Section -->
+		<section class="py-16">
+			<div class="container mx-auto px-4">
+				<!-- Section Header -->
+				<div class="text-center mb-12">
+					<h2 class="text-3xl font-bold text-gray-900 mb-4">
+						Complete Your Journey
+					</h2>
+					<p class="text-lg text-gray-600 max-w-2xl mx-auto">
+						From everyday carry to adventure-ready gear, find the
+						perfect bags and footwear for every occasion
+					</p>
+				</div>
+
+				<!-- Filter & Products Grid -->
+				<FilterableProductGrid
+					allProducts={bagsFootwearProducts}
+					categories={bagsFootwearCategories}
+					colorScheme="teal"
+					client:load
+				/>
+			</div>
+		</section>
+	</main>
+
+	<Footer />
+</Layout>

@@ -1,0 +1,78 @@
+---
+import { Card, CardContent } from "./ui/card";
+
+const testimonials = [
+	{
+		name: "Sarah Johnson",
+		position: "Purchasing Manager",
+		company: "Fashion Retailer Inc.",
+		content:
+			"Partnering with Clothify B2B has transformed our supply chain. The quality of their products and reliability of delivery has allowed us to grow our business by 40% in just one year.",
+		avatar: "https://randomuser.me/api/portraits/women/32.jpg",
+	},
+	{
+		name: "Michael Chen",
+		position: "CEO",
+		company: "TrendStyle Boutiques",
+		content:
+			"The wholesale pricing from Clothify allowed us to maintain healthy margins while still offering competitive prices to our customers. Their range of styles keeps our inventory fresh and exciting.",
+		avatar: "https://randomuser.me/api/portraits/men/45.jpg",
+	},
+	{
+		name: "Emma Rodriguez",
+		position: "Procurement Director",
+		company: "Global Fashion Group",
+		content:
+			"We've been working with many suppliers across the globe, but Clothify stands out with their dedication to quality and customer service. Their team goes above and beyond to meet our requirements.",
+		avatar: "https://randomuser.me/api/portraits/women/22.jpg",
+	},
+];
+---
+
+<section class="py-20 bg-gradient-to-r from-primary/5 to-secondary/5">
+	<div class="container mx-auto px-4">
+		<div class="text-center mb-12">
+			<h2 class="text-3xl md:text-4xl font-bold text-foreground mb-2">
+				What Our Partners Say
+			</h2>
+			<p class="text-lg text-muted-foreground max-w-2xl mx-auto">
+				Trusted by retailers and fashion brands worldwide
+			</p>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			{
+				testimonials.map((testimonial) => (
+					<Card className="bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+						<CardContent className="p-8 relative">
+							<div class="text-4xl text-primary/20 mb-4">
+								<i class="fas fa-quote-left" />
+							</div>
+							<p class="text-muted-foreground leading-relaxed italic mb-6">
+								{testimonial.content}
+							</p>
+						</CardContent>
+						<div class="flex items-center px-8 py-6 border-t border-border">
+							<img
+								src={testimonial.avatar}
+								alt={testimonial.name}
+								class="w-15 h-15 rounded-full object-cover mr-4 border-2 border-white shadow-sm"
+							/>
+							<div>
+								<h4 class="font-semibold text-foreground">
+									{testimonial.name}
+								</h4>
+								<p class="text-sm text-muted-foreground mt-1">
+									{testimonial.position}
+								</p>
+								<p class="text-sm text-muted-foreground">
+									{testimonial.company}
+								</p>
+							</div>
+						</div>
+					</Card>
+				))
+			}
+		</div>
+	</div>
+</section>

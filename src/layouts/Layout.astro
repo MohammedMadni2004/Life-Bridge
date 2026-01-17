@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const {
+	title,
+	description = "LifeBridge Guidance - After Loss Family Concierge Services providing white-glove guidance after the loss of a spouse or family member",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>{title}</title>
+		
+		<!-- Google Fonts - Cormorant Garamond for elegant headings, Lato for body -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Lato:wght@300;400;700&display=swap"
+			rel="stylesheet"
+		/>
+		
+		<!-- Calendly Styles -->
+		<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
+	</head>
+	<body class="antialiased">
+		<slot />
+		
+		<!-- Calendly Widget Script -->
+		<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+	</body>
+</html>
