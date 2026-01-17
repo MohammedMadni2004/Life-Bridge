@@ -201,21 +201,36 @@ const contactEmail = "hi@lifebridgeguidance.com"; // ⬅️ Update with your ema
 		</div>
 	</section>
 
-	<!-- ==================== MAIN MESSAGE SECTION ==================== -->
-	<section id="about" class="py-16 md:py-24 bg-gradient-to-b from-[#f5f7f9] to-[#e8eef4]">
-		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-			<h2 class="text-3xl md:text-4xl lg:text-5xl text-[#2c3e50] mb-4" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
-				When everything changes, you shouldn't have<br class="hidden md:block" /> to figure it out alone.
-			</h2>
-			<p class="text-lg text-[#4a5568]">
-				We bring order, clarity, and support—<em class="text-[#4a6b8a]" style="font-family: 'Cormorant Garamond', serif;">one step at a time.</em>
-			</p>
+	<!-- ==================== MAIN MESSAGE + THREE PILLARS COMBINED SECTION ==================== -->
+	<section id="about" class="relative overflow-hidden">
+		<!-- Background Image - image_part_3.jpg spans the entire section -->
+		<div class="absolute inset-0 z-0">
+			<img 
+				src="/image_part_3.jpg"
+				alt="Misty mountains background"
+				class="w-full h-full object-cover"
+				style="object-position: center 60%;"
+			/>
+			<!-- Softer overlay to show more of the misty landscape -->
+			<div class="absolute inset-0 bg-gradient-to-b from-white/55 via-white/45 to-white/35"></div>
 		</div>
-	</section>
 
-	<!-- ==================== THREE PILLARS SECTION ==================== -->
-	<section id="services" class="py-16 md:py-20 bg-[#e8eef4]">
-		<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+		<!-- Main Message -->
+		<div class="relative z-10 pt-16 md:pt-24 pb-8 md:pb-12">
+			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+				<h2 class="text-3xl md:text-4xl lg:text-5xl text-[#2c3e50] mb-4" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
+					When everything changes, you shouldn't have<br class="hidden md:block" /> to figure it out alone.
+				</h2>
+				<div class="w-32 h-[1px] bg-[#4a6b8a]/40 mx-auto mb-4"></div>
+				<p class="text-lg text-[#4a5568]">
+					We bring order, clarity, and support—<em class="text-[#4a6b8a]" style="font-family: 'Cormorant Garamond', serif;">one step at a time.</em>
+				</p>
+			</div>
+		</div>
+
+		<!-- Three Pillars -->
+		<div id="services" class="relative z-10 py-12 md:py-16">
+			<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
 				
 				<!-- Stabilize Card -->
@@ -334,66 +349,71 @@ const contactEmail = "hi@lifebridgeguidance.com"; // ⬅️ Update with your ema
 				</div>
 
 			</div>
+			</div>
 		</div>
 	</section>
 
 	<!-- ==================== CORE SERVICES SECTION ==================== -->
-	<section class="py-16 md:py-24 bg-gradient-to-b from-[#e8eef4] to-[#dce5ed] relative overflow-hidden">
-		<!-- Decorative background image -->
-		<div class="absolute right-0 top-0 bottom-0 w-1/2 opacity-20 hidden lg:block">
+	<section class="relative overflow-hidden">
+		<!-- Background Image - image_part_2.jpg for middle section -->
+		<div class="absolute inset-0 z-0 overflow-hidden">
 			<img 
-				src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2670&auto=format&fit=crop"
-				alt="Mountain landscape"
-				class="w-full h-full object-cover"
+				src="/image_part_2.jpg"
+				alt="Misty lake and mountains"
+				class="w-full h-full object-cover scale-[1.3]"
+				style="object-position: center 55%;"
 			/>
-			<div class="absolute inset-0 bg-gradient-to-r from-[#e8eef4] via-[#e8eef4]/80 to-transparent"></div>
+			<!-- Light overlay for readability while showing the landscape -->
+			<div class="absolute inset-0 bg-gradient-to-b from-white/45 via-white/25 to-white/35"></div>
 		</div>
 
-		<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-			<div class="text-center mb-12">
-				<h2 class="text-3xl md:text-4xl text-[#2c3e50] mb-4" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
+		<div class="relative z-10 py-16 md:py-24">
+			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+				<!-- Decorative line -->
+				<div class="w-16 h-[2px] bg-[#4a6b8a]/50 mx-auto mb-6"></div>
+				
+				<!-- Main Title -->
+				<h2 class="text-3xl md:text-4xl text-[#2c3e50] mb-8" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
 					After Loss Family Concierge Services
 				</h2>
-			</div>
 
-			<div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-lg border border-white/50">
-				<div class="mb-8">
-					<h3 class="text-xl md:text-2xl text-[#2c3e50] mb-2" style="font-family: 'Cormorant Garamond', serif; font-weight: 600;">
-						LifeBridge Core Support
-					</h3>
-					<p class="text-[#718096] italic">
-						A 6-Month After Loss Family Concierge Program
-					</p>
+				<!-- Subtitle -->
+				<p class="text-lg md:text-xl text-[#2c3e50] mb-2" style="font-family: 'Cormorant Garamond', serif; font-weight: 600;">
+					LifeBridge Core Support <span class="text-[#718096] font-normal">|</span> <em class="text-[#6b8599] font-normal">A 6-Month After Loss Family Concierge Program</em>
+				</p>
+
+				<!-- Bullet Points - centered container with left-aligned text -->
+				<div class="max-w-md mx-auto mt-8 mb-10">
+					<ul class="space-y-3 text-left">
+						<li class="flex items-start gap-3">
+							<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+							</svg>
+							<span class="text-[#4a5568]">Personalized, one-on-one guidance</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+							</svg>
+							<span class="text-[#4a5568]">Benefit and claim assistance</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+							</svg>
+							<span class="text-[#4a5568]">Financial and document organization</span>
+						</li>
+						<li class="flex items-start gap-3">
+							<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+							</svg>
+							<span class="text-[#4a5568]">Attorney, CPA, and advisor coordination</span>
+						</li>
+					</ul>
 				</div>
 
-				<ul class="space-y-4 mb-8">
-					<li class="flex items-start gap-3">
-						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-						</svg>
-						<span class="text-[#4a5568]">Personalized, one-on-one guidance</span>
-					</li>
-					<li class="flex items-start gap-3">
-						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-						</svg>
-						<span class="text-[#4a5568]">Benefit and claim assistance</span>
-					</li>
-					<li class="flex items-start gap-3">
-						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-						</svg>
-						<span class="text-[#4a5568]">Financial and document organization</span>
-					</li>
-					<li class="flex items-start gap-3">
-						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-						</svg>
-						<span class="text-[#4a5568]">Attorney, CPA, and advisor coordination</span>
-					</li>
-				</ul>
-
-				<p class="text-sm text-[#718096] italic border-t border-slate-200 pt-6">
+				<!-- Disclaimer -->
+				<p class="text-sm text-[#718096] italic max-w-2xl mx-auto">
 					All services are delivered through a dedicated After Loss Family Concierge—not a call center, not a rotating team.
 				</p>
 			</div>
@@ -401,52 +421,70 @@ const contactEmail = "hi@lifebridgeguidance.com"; // ⬅️ Update with your ema
 	</section>
 
 	<!-- ==================== YOU'RE NOT ALONE SECTION ==================== -->
-	<section id="contact" class="py-16 md:py-24 bg-[#dce5ed]">
-		<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-			<h2 class="text-3xl md:text-4xl text-[#2c3e50] mb-8" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
-				You're not alone.
-			</h2>
+	<section id="contact" class="relative overflow-hidden">
+		<!-- Background Image - image_part_3.jpg for bottom section -->
+		<div class="absolute inset-0 z-0 overflow-hidden">
+			<img 
+				src="/image_part_3.jpg"
+				alt="Misty mountains"
+				class="w-full h-full object-cover scale-[1.3]"
+				style="object-position: center 55%;"
+			/>
+			<!-- Softer overlay to show more of the misty mountains -->
+			<div class="absolute inset-0 bg-gradient-to-b from-white/50 via-white/40 to-white/35"></div>
+		</div>
 
-			<div class="space-y-4 mb-10 text-left max-w-md mx-auto">
-				<div class="flex items-start gap-3">
-					<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-					</svg>
-					<span class="text-[#4a5568]">Feeling overwhelmed by what to do next?</span>
+		<div class="relative z-10 py-16 md:py-24">
+			<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+				<div class="flex items-center justify-center gap-4 mb-6">
+					<div class="w-12 h-[1px] bg-[#4a6b8a]/40"></div>
+					<div class="w-12 h-[1px] bg-[#4a6b8a]/40"></div>
 				</div>
-				<div class="flex items-start gap-3">
-					<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-					</svg>
-					<span class="text-[#4a5568]">Need help managing the details and decisions?</span>
-				</div>
-				<div class="flex items-start gap-3">
-					<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-					</svg>
-					<span class="text-[#4a5568]">Looking for steady, compassionate support you can trust?</span>
-				</div>
-			</div>
+				<h2 class="text-3xl md:text-4xl text-[#2c3e50] mb-8" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
+					You're not alone.
+				</h2>
 
-			<p class="text-[#718096] text-sm mb-10 max-w-xl mx-auto">
-				Lifebridge Guidance provides education, organization, and care coordination services. After Loss Family Concierge services do not provide legal, tax, or financial advice. Talk to someone who understands.
-			</p>
-
-			<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-				<button 
-					onclick={`Calendly.initPopupWidget({url: '${calendlyUrl}'});return false;`}
-					class="bg-[#4a6b8a] hover:bg-[#3a5570] text-white px-8 py-3.5 rounded-md font-medium transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
-				>
-					Book a Free 15-Minute Call
-				</button>
-				<div class="flex items-center gap-2 text-[#4a5568]">
-					<span>or email us:</span>
-					<a href={`mailto:${contactEmail}`} class="flex items-center gap-2 text-[#4a6b8a] hover:text-[#3a5570] transition-colors">
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+				<div class="space-y-4 mb-10 text-left max-w-md mx-auto">
+					<div class="flex items-start gap-3">
+						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
 						</svg>
-						{contactEmail}
-					</a>
+						<span class="text-[#4a5568]">Feeling overwhelmed by what to do next?</span>
+					</div>
+					<div class="flex items-start gap-3">
+						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+						</svg>
+						<span class="text-[#4a5568]">Need help managing the details and decisions?</span>
+					</div>
+					<div class="flex items-start gap-3">
+						<svg class="w-5 h-5 text-[#4a6b8a] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+						</svg>
+						<span class="text-[#4a5568]">Looking for steady, compassionate support you can trust?</span>
+					</div>
+				</div>
+
+				<p class="text-[#718096] text-sm mb-10 max-w-xl mx-auto">
+					Lifebridge Guidance provides education, organization, and care coordination services. After Loss Family Concierge services do not provide legal, tax, or financial advice. Talk to someone who understands.
+				</p>
+
+				<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+					<button 
+						onclick={`Calendly.initPopupWidget({url: '${calendlyUrl}'});return false;`}
+						class="bg-[#4a6b8a] hover:bg-[#3a5570] text-white px-8 py-3.5 rounded-md font-medium transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+					>
+						Book a Free 15-Minute Call
+					</button>
+					<div class="flex items-center gap-2 text-[#4a5568]">
+						<span>or email us:</span>
+						<a href={`mailto:${contactEmail}`} class="flex items-center gap-2 text-[#4a6b8a] hover:text-[#3a5570] transition-colors">
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+							</svg>
+							{contactEmail}
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
