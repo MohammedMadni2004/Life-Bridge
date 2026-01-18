@@ -1,0 +1,144 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getBlogPost, getBlogPosts } from '../../lib/contentful';
+
+const calendlyUrl = "https://calendly.com/mohammedmadni09/30min";
+
+export async function getStaticPaths() {
+  const blogPosts = await getBlogPosts();
+  return blogPosts.map((post) => ({
+    params: { slug: post.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const post = slug ? await getBlogPost(slug) : null;
+
+if (!post) {
+  return Astro.redirect('/blog');
+}
+---
+
+<Layout title={`${post.title} - LifeBridge Guidance`}>
+	<!-- ==================== HEADER ==================== -->
+	<header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200/50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex items-center justify-between h-16 md:h-20">
+				<!-- Logo -->
+				<a href="/" class="flex items-center gap-2 group">
+					<svg class="w-8 h-8 text-[#4a6b8a] group-hover:text-[#3a5570] transition-colors" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M20 4L4 12v16l16 8 16-8V12L20 4z" stroke="currentColor" stroke-width="2" fill="none"/>
+						<path d="M20 20v16M4 12l16 8 16-8" stroke="currentColor" stroke-width="2"/>
+						<circle cx="20" cy="12" r="4" fill="currentColor" opacity="0.3"/>
+					</svg>
+					<div class="flex flex-col">
+						<span class="text-xl md:text-2xl font-medium text-[#2c3e50]" style="font-family: 'Cormorant Garamond', serif;">LifeBridge Guidance</span>
+						<span class="text-[10px] md:text-xs text-[#718096] tracking-wide hidden sm:block">Family Loss Concierge Services</span>
+					</div>
+				</a>
+
+				<!-- Desktop Navigation -->
+				<nav class="hidden md:flex items-center gap-8">
+					<a href="/" class="text-[#4a5568] hover:text-[#4a6b8a] transition-colors text-sm font-medium">Home</a>
+					<a href="/blog" class="text-[#4a6b8a] font-medium text-sm">Blog</a>
+					<a href="#contact" class="text-[#4a5568] hover:text-[#4a6b8a] transition-colors text-sm font-medium">Contact</a>
+					<button 
+						onclick={`Calendly.initPopupWidget({url: '${calendlyUrl}'});return false;`}
+						class="bg-[#4a6b8a] hover:bg-[#3a5570] text-white px-5 py-2.5 rounded-md text-sm font-medium transition-all duration-300 hover:shadow-lg"
+					>
+						Book a Free Call
+					</button>
+				</nav>
+
+				<!-- Mobile Menu Button -->
+				<button id="mobile-menu-btn" class="md:hidden p-2 text-[#4a5568] hover:text-[#4a6b8a]">
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+
+		<!-- Mobile Menu -->
+		<div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-200">
+			<div class="px-4 py-4 space-y-3">
+				<a href="/" class="block text-[#4a5568] hover:text-[#4a6b8a] py-2">Home</a>
+				<a href="/blog" class="block text-[#4a6b8a] py-2 font-medium">Blog</a>
+				<a href="#contact" class="block text-[#4a5568] hover:text-[#4a6b8a] py-2">Contact</a>
+				<button 
+					onclick={`Calendly.initPopupWidget({url: '${calendlyUrl}'});return false;`}
+					class="w-full bg-[#4a6b8a] hover:bg-[#3a5570] text-white px-5 py-2.5 rounded-md text-sm font-medium transition-all"
+				>
+					Book a Free Call
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<!-- ==================== BLOG POST ==================== -->
+	<main class="pt-24 pb-16 min-h-screen bg-gradient-to-b from-[#f5f7f9] to-[#e8eef4]">
+		<article class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="bg-white rounded-xl p-8 md:p-12 shadow-sm border border-slate-200/50">
+				<header class="mb-8">
+					<h1 class="text-3xl md:text-4xl lg:text-5xl text-[#2c3e50] mb-4" style="font-family: 'Cormorant Garamond', serif; font-weight: 400;">
+						{post.title}
+					</h1>
+					<p class="text-xl text-[#718096] mb-6">{post.description}</p>
+					
+					<div class="flex items-center gap-4 text-sm text-[#718096] mb-6 pb-6 border-b border-slate-200">
+						<time datetime={post.publishedDate}>
+							{new Date(post.publishedDate).toLocaleDateString('en-US', { 
+								year: 'numeric', 
+								month: 'long', 
+								day: 'numeric' 
+							})}
+						</time>
+						<span>•</span>
+						<span>{post.author}</span>
+					</div>
+
+					{post.tags && post.tags.length > 0 && (
+						<div class="flex flex-wrap gap-2 mb-8">
+							{post.tags.map((tag) => (
+								<span class="px-3 py-1 bg-[#4a6b8a]/10 text-[#4a6b8a] rounded-full text-xs font-medium">
+									{tag}
+								</span>
+							))}
+						</div>
+					)}
+				</header>
+
+				<div class="prose prose-slate max-w-none prose-headings:text-[#2c3e50] prose-headings:font-serif prose-p:text-[#4a5568] prose-p:leading-relaxed prose-a:text-[#4a6b8a] prose-a:no-underline hover:prose-a:underline prose-strong:text-[#2c3e50] prose-ul:text-[#4a5568] prose-ol:text-[#4a5568] whitespace-pre-wrap">
+					{post.content}
+				</div>
+
+				<footer class="mt-12 pt-8 border-t border-slate-200">
+					<a 
+						href="/blog"
+						class="inline-flex items-center text-[#4a6b8a] hover:text-[#3a5570] font-medium transition-colors"
+					>
+						← Back to Blog
+					</a>
+				</footer>
+			</div>
+		</article>
+	</main>
+
+	<!-- Mobile Menu Toggle Script -->
+	<script>
+		const menuBtn = document.getElementById('mobile-menu-btn');
+		const mobileMenu = document.getElementById('mobile-menu');
+		
+		menuBtn?.addEventListener('click', () => {
+			mobileMenu?.classList.toggle('hidden');
+		});
+
+		const mobileLinks = mobileMenu?.querySelectorAll('a');
+		mobileLinks?.forEach(link => {
+			link.addEventListener('click', () => {
+				mobileMenu?.classList.add('hidden');
+			});
+		});
+	</script>
+</Layout>
+
