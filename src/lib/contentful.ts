@@ -6,6 +6,77 @@ const { createClient } = contentful;
 // Export BlogPost type
 export type { BlogPost };
 
+// Helper function to extract text from Contentful Rich Text objects
+function extractTextFromRichText(content: any): string {
+  if (!content) return '';
+  
+  // If it's already a string, return it
+  if (typeof content === 'string') {
+    return content;
+  }
+  
+  // If it's not an object, return empty string
+  if (typeof content !== 'object' || content === null) {
+    return '';
+  }
+  
+  // Recursive function to extract text from Rich Text structure
+  const extractText = (node: any): string => {
+    if (!node) return '';
+    
+    // If it's a text node, return its value
+    if (node.nodeType === 'text' || node.nodeType === 'TEXT') {
+      return node.value || '';
+    }
+    
+    // If it has a value property (some formats)
+    if (node.value && typeof node.value === 'string') {
+      return node.value;
+    }
+    
+    // If it has content array, recursively process
+    if (node.content && Array.isArray(node.content)) {
+      const extracted = node.content.map(extractText).filter((t: string) => t.length > 0);
+      // Add line breaks for paragraphs
+      if (node.nodeType === 'paragraph' || node.nodeType === 'PARAGRAPH') {
+        return extracted.join('\n\n');
+      }
+      return extracted.join(' ');
+    }
+    
+    // If it's an array, process each item
+    if (Array.isArray(node)) {
+      return node.map(extractText).filter((t: string) => t.length > 0).join(' ');
+    }
+    
+    // If it's a document type, look for content
+    if (node.nodeType === 'document' || node.nodeType === 'DOCUMENT') {
+      if (node.content) {
+        return extractText(node.content);
+      }
+    }
+    
+    // For paragraph, heading, etc., extract their content
+    if (node.nodeType && node.content) {
+      return extractText(node.content);
+    }
+    
+    return '';
+  };
+  
+  // Try to extract text from the object
+  const extracted = extractText(content);
+  
+  // If extraction failed, log and return empty
+  if (!extracted || extracted.trim() === '') {
+    console.warn("[Contentful] Could not extract text from Rich Text content object");
+    console.warn("[Contentful] Content structure:", JSON.stringify(content).substring(0, 200));
+    return '';
+  }
+  
+  return extracted;
+}
+
 // Check if Contentful is configured
 // Try both public and private env var access patterns
 const spaceId = import.meta.env.CONTENTFUL_SPACE_ID || import.meta.env.PUBLIC_CONTENTFUL_SPACE_ID;
@@ -81,6 +152,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       const entries = await client.getEntries({
         content_type: contentTypeToUse,
         order: ["-fields.publishedDate"],
+        limit: 1000, // Get all posts (Contentful default is 100)
       });
 
       console.log("[Contentful] ✅ Found", entries.items.length, "blog posts");
@@ -104,10 +176,13 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           }
         }
         
+        // Handle content field - could be Rich Text object, string, or plain text
+        const content = extractTextFromRichText(item.fields.content);
+        
         return {
           title: item.fields.title || "",
           description: item.fields.description || "",
-          content: item.fields.content || "",
+          content: content,
           author: item.fields.author || "LifeBridge Guidance",
           publishedDate: item.fields.publishedDate || new Date().toISOString(),
           tags: tags,
@@ -194,10 +269,13 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
           }
         }
         
+        // Handle content field - could be Rich Text object, string, or plain text
+        const content = extractTextFromRichText(item.fields.content);
+        
         return {
           title: item.fields.title || "",
           description: item.fields.description || "",
-          content: item.fields.content || "",
+          content: content,
           author: item.fields.author || "LifeBridge Guidance",
           publishedDate: item.fields.publishedDate || new Date().toISOString(),
           tags: tags,
