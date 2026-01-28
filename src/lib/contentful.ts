@@ -92,15 +92,28 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         console.warn("[Contentful]   2. The content type name matches (tried:", contentTypeToUse, ")");
       }
 
-      const contentfulPosts = entries.items.map((item: any) => ({
-        title: item.fields.title || "",
-        description: item.fields.description || "",
-        content: item.fields.content || "",
-        author: item.fields.author || "LifeBridge Guidance",
-        publishedDate: item.fields.publishedDate || new Date().toISOString(),
-        tags: item.fields.tags || [],
-        slug: item.fields.slug || "",
-      }));
+      const contentfulPosts = entries.items.map((item: any) => {
+        // Ensure tags is always an array
+        let tags = item.fields.tags || [];
+        if (!Array.isArray(tags)) {
+          // If tags is a string, convert to array
+          if (typeof tags === 'string') {
+            tags = tags.split(',').map((t: string) => t.trim()).filter((t: string) => t.length > 0);
+          } else {
+            tags = [];
+          }
+        }
+        
+        return {
+          title: item.fields.title || "",
+          description: item.fields.description || "",
+          content: item.fields.content || "",
+          author: item.fields.author || "LifeBridge Guidance",
+          publishedDate: item.fields.publishedDate || new Date().toISOString(),
+          tags: tags,
+          slug: item.fields.slug || "",
+        };
+      });
 
       // If Contentful has posts, return them; otherwise fall back to local
       if (contentfulPosts.length > 0) {
@@ -169,13 +182,25 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       if (entries.items.length > 0) {
         console.log("[Contentful] Found blog post:", entries.items[0].fields.title);
         const item = entries.items[0] as any;
+        
+        // Ensure tags is always an array
+        let tags = item.fields.tags || [];
+        if (!Array.isArray(tags)) {
+          // If tags is a string, convert to array
+          if (typeof tags === 'string') {
+            tags = tags.split(',').map((t: string) => t.trim()).filter((t: string) => t.length > 0);
+          } else {
+            tags = [];
+          }
+        }
+        
         return {
           title: item.fields.title || "",
           description: item.fields.description || "",
           content: item.fields.content || "",
           author: item.fields.author || "LifeBridge Guidance",
           publishedDate: item.fields.publishedDate || new Date().toISOString(),
-          tags: item.fields.tags || [],
+          tags: tags,
           slug: item.fields.slug || "",
         };
       } else {
