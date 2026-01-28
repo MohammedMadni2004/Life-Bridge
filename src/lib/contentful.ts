@@ -49,16 +49,17 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       // First, try to get all content types to see what's available
       let contentTypeToUse = "blogPost"; // Default
       try {
+        console.log("[Contentful] Fetching available content types...");
         const allContentTypes = await client.getContentTypes();
         const availableTypes = allContentTypes.items.map((t: any) => t.sys.id);
-        console.log("[Contentful] Available content types:", availableTypes);
+        console.log("[Contentful] ✅ Available content types:", availableTypes);
         
         // Try to find a matching content type
         const possibleNames = ["blogPost", "SOmthijng", "blog-post", "BlogPost", "blog_post"];
         for (const name of possibleNames) {
           if (availableTypes.includes(name)) {
             contentTypeToUse = name;
-            console.log(`[Contentful] Found matching content type: "${name}"`);
+            console.log(`[Contentful] ✅ Found matching content type: "${name}"`);
             break;
           }
         }
@@ -66,19 +67,30 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         // If no match found, use the first available type (for debugging)
         if (!availableTypes.includes(contentTypeToUse) && availableTypes.length > 0) {
           console.warn(`[Contentful] ⚠️ Content type "blogPost" not found. Available types:`, availableTypes);
-          console.warn(`[Contentful] Using first available type: "${availableTypes[0]}"`);
+          console.warn(`[Contentful] ⚠️ Using first available type: "${availableTypes[0]}"`);
           contentTypeToUse = availableTypes[0];
+        } else if (availableTypes.length === 0) {
+          console.warn("[Contentful] ⚠️ No content types found in space!");
         }
-      } catch (e) {
-        console.warn("[Contentful] Could not fetch content types list, using default 'blogPost'");
+      } catch (e: any) {
+        console.error("[Contentful] ❌ Error fetching content types:", e.message);
+        console.warn("[Contentful] ⚠️ Could not fetch content types list, using default 'blogPost'");
       }
       
+      console.log(`[Contentful] Attempting to fetch entries with content type: "${contentTypeToUse}"`);
       const entries = await client.getEntries({
         content_type: contentTypeToUse,
         order: ["-fields.publishedDate"],
       });
 
-      console.log("[Contentful] Found", entries.items.length, "blog posts");
+      console.log("[Contentful] ✅ Found", entries.items.length, "blog posts");
+      
+      if (entries.items.length === 0) {
+        console.warn("[Contentful] ⚠️ No blog posts found in Contentful!");
+        console.warn("[Contentful] ⚠️ Make sure:");
+        console.warn("[Contentful]   1. You have published entries in your content type");
+        console.warn("[Contentful]   2. The content type name matches (tried:", contentTypeToUse, ")");
+      }
 
       const contentfulPosts = entries.items.map((item: any) => ({
         title: item.fields.title || "",
