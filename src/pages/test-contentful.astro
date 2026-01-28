@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getBlogPosts } from '../lib/contentful';
+
+// This page helps debug Contentful configuration
+const blogPosts = await getBlogPosts();
+const spaceId = import.meta.env.CONTENTFUL_SPACE_ID || import.meta.env.PUBLIC_CONTENTFUL_SPACE_ID;
+const accessToken = import.meta.env.CONTENTFUL_ACCESS_TOKEN || import.meta.env.PUBLIC_CONTENTFUL_ACCESS_TOKEN;
+---
+
+<Layout title="Contentful Test - LifeBridge Guidance">
+	<div class="min-h-screen bg-gray-50 py-16 px-4">
+		<div class="max-w-4xl mx-auto">
+			<h1 class="text-3xl font-bold mb-8">Contentful Configuration Test</h1>
+			
+			<div class="bg-white rounded-lg shadow p-6 mb-6">
+				<h2 class="text-xl font-semibold mb-4">Environment Variables Status</h2>
+				<div class="space-y-2">
+					<div class="flex items-center gap-2">
+						<span class="font-medium">CONTENTFUL_SPACE_ID:</span>
+						{spaceId ? (
+							<span class="text-green-600">✅ Set (length: {spaceId.length})</span>
+						) : (
+							<span class="text-red-600">❌ Missing</span>
+						)}
+					</div>
+					<div class="flex items-center gap-2">
+						<span class="font-medium">CONTENTFUL_ACCESS_TOKEN:</span>
+						{accessToken ? (
+							<span class="text-green-600">✅ Set (length: {accessToken.length})</span>
+						) : (
+							<span class="text-red-600">❌ Missing</span>
+						)}
+					</div>
+				</div>
+			</div>
+
+			<div class="bg-white rounded-lg shadow p-6 mb-6">
+				<h2 class="text-xl font-semibold mb-4">Blog Posts Status</h2>
+				<div class="space-y-2">
+					<div>
+						<span class="font-medium">Total blog posts found:</span>
+						<span class="ml-2 text-lg font-semibold">{blogPosts.length}</span>
+					</div>
+					{blogPosts.length > 0 && (
+						<div class="mt-4">
+							<p class="font-medium mb-2">Posts:</p>
+							<ul class="list-disc list-inside space-y-1">
+								{blogPosts.map((post) => (
+									<li key={post.slug}>
+										{post.title} (slug: {post.slug})
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
+				</div>
+			</div>
+
+			<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+				<h2 class="text-xl font-semibold mb-4 text-yellow-800">Troubleshooting Steps</h2>
+				<ol class="list-decimal list-inside space-y-2 text-yellow-900">
+					<li>If environment variables show as "Missing", go to Vercel → Settings → Environment Variables and add them</li>
+					<li>Make sure variables are set for <strong>Production</strong> environment</li>
+					<li>After adding variables, you MUST redeploy (Vercel → Deployments → Redeploy)</li>
+					<li>Use <strong>Content Delivery API</strong> token (not Management API)</li>
+					<li>Check Vercel build logs for <code>[Contentful]</code> messages</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</Layout>
+

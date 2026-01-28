@@ -36,11 +36,16 @@ Contentful has TWO types of tokens:
 
 1. Go to Vercel Dashboard → Your Project → **Settings** → **Environment Variables**
 2. Make sure both variables are set:
-   - `CONTENTFUL_SPACE_ID`
-   - `CONTENTFUL_ACCESS_TOKEN`
-3. **Critical:** Check the environment dropdown - must include **Production**
-4. After adding/updating, you MUST redeploy:
+   - `CONTENTFUL_SPACE_ID` = Your Space ID (from Contentful → Settings → API keys)
+   - `CONTENTFUL_ACCESS_TOKEN` = Content Delivery API token (NOT Management API)
+3. **Critical:** Check the environment dropdown - must include **Production** ✅
+4. **After adding/updating, you MUST redeploy:**
    - Go to **Deployments** → Click "..." on latest → **Redeploy**
+   - Or trigger via webhook: `curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_WPM1Zm36AQpoZsGuO9mtirQ8LyP7/hVotux8Ulz`
+
+**Test your setup:**
+- Visit: `https://life-bridge-ruby.vercel.app/test-contentful`
+- This page will show if environment variables are set correctly
 
 ### ✅ Issue #4: Blog Post Not Actually Published
 **Draft posts won't appear!**

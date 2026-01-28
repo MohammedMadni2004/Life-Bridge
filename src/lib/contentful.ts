@@ -7,18 +7,34 @@ const { createClient } = contentful;
 export type { BlogPost };
 
 // Check if Contentful is configured
-const isContentfulConfigured =
-  import.meta.env.CONTENTFUL_SPACE_ID &&
-  import.meta.env.CONTENTFUL_ACCESS_TOKEN;
+// Try both public and private env var access patterns
+const spaceId = import.meta.env.CONTENTFUL_SPACE_ID || import.meta.env.PUBLIC_CONTENTFUL_SPACE_ID;
+const accessToken = import.meta.env.CONTENTFUL_ACCESS_TOKEN || import.meta.env.PUBLIC_CONTENTFUL_ACCESS_TOKEN;
+
+const isContentfulConfigured = spaceId && accessToken;
+
+// Log configuration status (will show in build logs)
+if (typeof process !== 'undefined' && process.env) {
+  console.log("[Contentful Config Check]");
+  console.log("[Contentful Config Check] Space ID exists:", !!spaceId);
+  console.log("[Contentful Config Check] Access Token exists:", !!accessToken);
+  console.log("[Contentful Config Check] Is configured:", isContentfulConfigured);
+}
 
 // Create Contentful client only if configured
 let client: ReturnType<typeof createClient> | null = null;
 
 if (isContentfulConfigured) {
   client = createClient({
-    space: import.meta.env.CONTENTFUL_SPACE_ID!,
-    accessToken: import.meta.env.CONTENTFUL_ACCESS_TOKEN!,
+    space: spaceId!,
+    accessToken: accessToken!,
   });
+  console.log("[Contentful] Client created successfully");
+} else {
+  console.warn("[Contentful] ⚠️ Contentful is NOT configured!");
+  console.warn("[Contentful] Space ID:", spaceId ? "Found" : "MISSING");
+  console.warn("[Contentful] Access Token:", accessToken ? "Found" : "MISSING");
+  console.warn("[Contentful] Will use local blog posts instead");
 }
 
 // Get all blog posts - tries Contentful first, falls back to local JSON
@@ -27,11 +43,38 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   if (isContentfulConfigured && client) {
     try {
       console.log("[Contentful] Attempting to fetch blog posts...");
-      console.log("[Contentful] Space ID:", import.meta.env.CONTENTFUL_SPACE_ID ? "Set" : "Missing");
-      console.log("[Contentful] Access Token:", import.meta.env.CONTENTFUL_ACCESS_TOKEN ? "Set" : "Missing");
+      console.log("[Contentful] Space ID:", spaceId ? "Set" : "Missing");
+      console.log("[Contentful] Access Token:", accessToken ? "Set" : "Missing");
+      
+      // First, try to get all content types to see what's available
+      let contentTypeToUse = "blogPost"; // Default
+      try {
+        const allContentTypes = await client.getContentTypes();
+        const availableTypes = allContentTypes.items.map((t: any) => t.sys.id);
+        console.log("[Contentful] Available content types:", availableTypes);
+        
+        // Try to find a matching content type
+        const possibleNames = ["blogPost", "SOmthijng", "blog-post", "BlogPost", "blog_post"];
+        for (const name of possibleNames) {
+          if (availableTypes.includes(name)) {
+            contentTypeToUse = name;
+            console.log(`[Contentful] Found matching content type: "${name}"`);
+            break;
+          }
+        }
+        
+        // If no match found, use the first available type (for debugging)
+        if (!availableTypes.includes(contentTypeToUse) && availableTypes.length > 0) {
+          console.warn(`[Contentful] ⚠️ Content type "blogPost" not found. Available types:`, availableTypes);
+          console.warn(`[Contentful] Using first available type: "${availableTypes[0]}"`);
+          contentTypeToUse = availableTypes[0];
+        }
+      } catch (e) {
+        console.warn("[Contentful] Could not fetch content types list, using default 'blogPost'");
+      }
       
       const entries = await client.getEntries({
-        content_type: "blogPost",
+        content_type: contentTypeToUse,
         order: ["-fields.publishedDate"],
       });
 
@@ -65,8 +108,11 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     }
   } else {
     console.log("[Contentful] Not configured - using local blog posts");
-    console.log("[Contentful] Space ID configured:", !!import.meta.env.CONTENTFUL_SPACE_ID);
-    console.log("[Contentful] Access Token configured:", !!import.meta.env.CONTENTFUL_ACCESS_TOKEN);
+    console.log("[Contentful] Space ID configured:", !!spaceId);
+    console.log("[Contentful] Access Token configured:", !!accessToken);
+    console.log("[Contentful] Make sure environment variables are set in Vercel:");
+    console.log("[Contentful]   - CONTENTFUL_SPACE_ID");
+    console.log("[Contentful]   - CONTENTFUL_ACCESS_TOKEN");
   }
 
   // Return local blog posts from constants
@@ -82,8 +128,28 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   if (isContentfulConfigured && client) {
     try {
       console.log("[Contentful] Fetching blog post with slug:", slug);
+      
+      // Get available content types to find the right one
+      let contentTypeToUse = "blogPost";
+      try {
+        const allContentTypes = await client.getContentTypes();
+        const availableTypes = allContentTypes.items.map((t: any) => t.sys.id);
+        const possibleNames = ["blogPost", "SOmthijng", "blog-post", "BlogPost", "blog_post"];
+        for (const name of possibleNames) {
+          if (availableTypes.includes(name)) {
+            contentTypeToUse = name;
+            break;
+          }
+        }
+        if (!availableTypes.includes(contentTypeToUse) && availableTypes.length > 0) {
+          contentTypeToUse = availableTypes[0];
+        }
+      } catch (e) {
+        // Use default
+      }
+      
       const entries = await client.getEntries({
-        content_type: "blogPost",
+        content_type: contentTypeToUse,
         "fields.slug": slug,
         limit: 1,
       });
