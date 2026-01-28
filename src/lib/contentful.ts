@@ -26,10 +26,16 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   // If Contentful is configured, try to fetch from there
   if (isContentfulConfigured && client) {
     try {
+      console.log("[Contentful] Attempting to fetch blog posts...");
+      console.log("[Contentful] Space ID:", import.meta.env.CONTENTFUL_SPACE_ID ? "Set" : "Missing");
+      console.log("[Contentful] Access Token:", import.meta.env.CONTENTFUL_ACCESS_TOKEN ? "Set" : "Missing");
+      
       const entries = await client.getEntries({
         content_type: "blogPost",
         order: ["-fields.publishedDate"],
       });
+
+      console.log("[Contentful] Found", entries.items.length, "blog posts");
 
       const contentfulPosts = entries.items.map((item: any) => ({
         title: item.fields.title || "",
@@ -43,12 +49,24 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 
       // If Contentful has posts, return them; otherwise fall back to local
       if (contentfulPosts.length > 0) {
+        console.log("[Contentful] Returning", contentfulPosts.length, "posts from Contentful");
         return contentfulPosts;
+      } else {
+        console.log("[Contentful] No posts found, falling back to local posts");
       }
-    } catch (error) {
-      console.error("Error fetching blog posts from Contentful:", error);
+    } catch (error: any) {
+      console.error("[Contentful] Error fetching blog posts:", error.message);
+      console.error("[Contentful] Error details:", error);
+      if (error.response) {
+        console.error("[Contentful] Response status:", error.response.status);
+        console.error("[Contentful] Response data:", error.response.data);
+      }
       // Fall through to return local posts
     }
+  } else {
+    console.log("[Contentful] Not configured - using local blog posts");
+    console.log("[Contentful] Space ID configured:", !!import.meta.env.CONTENTFUL_SPACE_ID);
+    console.log("[Contentful] Access Token configured:", !!import.meta.env.CONTENTFUL_ACCESS_TOKEN);
   }
 
   // Return local blog posts from constants
@@ -63,6 +81,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   // If Contentful is configured, try to fetch from there
   if (isContentfulConfigured && client) {
     try {
+      console.log("[Contentful] Fetching blog post with slug:", slug);
       const entries = await client.getEntries({
         content_type: "blogPost",
         "fields.slug": slug,
@@ -70,6 +89,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       });
 
       if (entries.items.length > 0) {
+        console.log("[Contentful] Found blog post:", entries.items[0].fields.title);
         const item = entries.items[0] as any;
         return {
           title: item.fields.title || "",
@@ -80,9 +100,15 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
           tags: item.fields.tags || [],
           slug: item.fields.slug || "",
         };
+      } else {
+        console.log("[Contentful] No blog post found with slug:", slug);
       }
-    } catch (error) {
-      console.error("Error fetching blog post from Contentful:", error);
+    } catch (error: any) {
+      console.error("[Contentful] Error fetching blog post:", error.message);
+      if (error.response) {
+        console.error("[Contentful] Response status:", error.response.status);
+        console.error("[Contentful] Response data:", error.response.data);
+      }
       // Fall through to check local posts
     }
   }
