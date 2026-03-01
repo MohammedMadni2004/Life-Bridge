@@ -13,23 +13,21 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Turn plain text (with \n\n paragraphs and optional ## / # headings) into HTML. */
+/** Turn plain text into HTML. One newline = new paragraph; ## / # = headings. */
 function plainTextToHtml(text: string): string {
   if (!text || typeof text !== "string") return "";
   const trimmed = text.trim();
-  const paragraphs = trimmed.split(/\n\n+/).filter((p) => p.length > 0);
+  const paragraphs = trimmed.split(/\n/).map((p) => p.trim()).filter((p) => p.length > 0);
   if (paragraphs.length === 0) return "";
   return paragraphs
     .map((p) => {
-      const line = p.trim();
-      if (line.startsWith("## ")) {
-        return `<h2 class="mt-8 mb-3">${escapeHtml(line.slice(3))}</h2>`;
+      if (p.startsWith("## ")) {
+        return `<h2 class="mt-8 mb-3">${escapeHtml(p.slice(3))}</h2>`;
       }
-      if (line.startsWith("# ")) {
-        return `<h1 class="mt-8 mb-3">${escapeHtml(line.slice(2))}</h1>`;
+      if (p.startsWith("# ")) {
+        return `<h1 class="mt-8 mb-3">${escapeHtml(p.slice(2))}</h1>`;
       }
-      const escaped = escapeHtml(p);
-      return `<p>${escaped.replace(/\n/g, "<br>")}</p>`;
+      return `<p class="mb-6">${escapeHtml(p)}</p>`;
     })
     .join("");
 }
