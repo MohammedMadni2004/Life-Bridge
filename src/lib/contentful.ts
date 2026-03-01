@@ -13,23 +13,115 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Turn plain text into HTML. One newline = new paragraph; ## / # = headings. */
+/** Turn plain text into HTML, auto-detecting headings, lists, and sub-sections. */
 function plainTextToHtml(text: string): string {
   if (!text || typeof text !== "string") return "";
-  const trimmed = text.trim();
-  const paragraphs = trimmed.split(/\n/).map((p) => p.trim()).filter((p) => p.length > 0);
-  if (paragraphs.length === 0) return "";
-  return paragraphs
-    .map((p) => {
-      if (p.startsWith("## ")) {
-        return `<h2 class="mt-8 mb-3">${escapeHtml(p.slice(3))}</h2>`;
+
+  // Patterns that should become <h2> section headings
+  const H2_PATTERNS = [
+    /^Step \d+:/i,
+    /^A Simple Checklist\b/i,
+    /^One Thing Every\b/i,
+    /^Need help navigating/i,
+    /^A Clear, Compassionate\b/i,
+  ];
+
+  // Patterns that should become <h3> sub-headings (✔ / ⚠ sections)
+  const H3_PATTERNS = [/^✔ /, /^⚠ /];
+
+  const lines = text.split(/\n/).map((l) => l.trim());
+  let html = "";
+  let inList = false;
+
+  const closeList = () => {
+    if (inList) {
+      html += "</ul>";
+      inList = false;
+    }
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Blank line → close any open list, add spacing
+    if (!line) {
+      closeList();
+      continue;
+    }
+
+    // Explicit markdown-style headings (## / #)
+    if (line.startsWith("## ")) {
+      closeList();
+      html += `<h2>${escapeHtml(line.slice(3))}</h2>`;
+      continue;
+    }
+    if (line.startsWith("# ")) {
+      closeList();
+      html += `<h1>${escapeHtml(line.slice(2))}</h1>`;
+      continue;
+    }
+
+    // "Step N:" and known section titles → <h2>
+    if (H2_PATTERNS.some((p) => p.test(line))) {
+      closeList();
+      html += `<h2>${escapeHtml(line)}</h2>`;
+      continue;
+    }
+
+    // "✔ " and "⚠ " sub-sections → <h3>
+    if (H3_PATTERNS.some((p) => p.test(line))) {
+      closeList();
+      html += `<h3>${escapeHtml(line)}</h3>`;
+      continue;
+    }
+
+    // Checklist items (☐) → bullet list
+    if (line.startsWith("☐ ")) {
+      if (!inList) {
+        html += "<ul>";
+        inList = true;
       }
-      if (p.startsWith("# ")) {
-        return `<h1 class="mt-8 mb-3">${escapeHtml(p.slice(2))}</h1>`;
+      html += `<li>${escapeHtml(line)}</li>`;
+      continue;
+    }
+
+    // Lines ending with ":" → check if 2+ items follow; if so, make a list
+    if (line.endsWith(":")) {
+      closeList();
+      let count = 0;
+      let j = i + 1;
+      while (
+        j < lines.length &&
+        lines[j].trim().length > 0 &&
+        !H2_PATTERNS.some((p) => p.test(lines[j].trim())) &&
+        !H3_PATTERNS.some((p) => p.test(lines[j].trim())) &&
+        !lines[j].trim().endsWith(":")
+      ) {
+        count++;
+        j++;
       }
-      return `<p class="mb-6">${escapeHtml(p)}</p>`;
-    })
-    .join("");
+      if (count >= 2) {
+        // Intro label + start of a list
+        html += `<p><strong>${escapeHtml(line)}</strong></p><ul>`;
+        inList = true;
+      } else {
+        html += `<p>${escapeHtml(line)}</p>`;
+      }
+      continue;
+    }
+
+    // Inside a list → add as list item
+    if (inList) {
+      html += `<li>${escapeHtml(line)}</li>`;
+      continue;
+    }
+
+    // Regular paragraph
+    html += `<p>${escapeHtml(line)}</p>`;
+  }
+
+  closeList();
+  return html;
 }
 
 /**
