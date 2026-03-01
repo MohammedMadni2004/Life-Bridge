@@ -13,13 +13,25 @@ function escapeHtml(text: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Turn plain text (with \n\n paragraphs) into simple HTML. */
+/** Turn plain text (with \n\n paragraphs and optional ## / # headings) into HTML. */
 function plainTextToHtml(text: string): string {
   if (!text || typeof text !== "string") return "";
-  const escaped = escapeHtml(text.trim());
-  const paragraphs = escaped.split(/\n\n+/).filter((p) => p.length > 0);
+  const trimmed = text.trim();
+  const paragraphs = trimmed.split(/\n\n+/).filter((p) => p.length > 0);
   if (paragraphs.length === 0) return "";
-  return paragraphs.map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("");
+  return paragraphs
+    .map((p) => {
+      const line = p.trim();
+      if (line.startsWith("## ")) {
+        return `<h2 class="mt-8 mb-3">${escapeHtml(line.slice(3))}</h2>`;
+      }
+      if (line.startsWith("# ")) {
+        return `<h1 class="mt-8 mb-3">${escapeHtml(line.slice(2))}</h1>`;
+      }
+      const escaped = escapeHtml(p);
+      return `<p>${escaped.replace(/\n/g, "<br>")}</p>`;
+    })
+    .join("");
 }
 
 /**
