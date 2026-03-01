@@ -6,6 +6,18 @@ const { createClient } = contentful;
 // Export BlogPost type
 export type { BlogPost };
 
+/** Convert any string to a URL-safe slug (lowercase, hyphens, no spaces). */
+export function slugify(text: string): string {
+  if (!text || typeof text !== "string") return "";
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 // Helper function to extract text from Contentful Rich Text objects
 function extractTextFromRichText(content: any): string {
   if (!content) return '';
@@ -179,6 +191,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
         // Handle content field - could be Rich Text object, string, or plain text
         const content = extractTextFromRichText(item.fields.content);
         
+        const rawSlug = item.fields.slug || item.fields.title || "";
         return {
           title: item.fields.title || "",
           description: item.fields.description || "",
@@ -186,7 +199,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           author: item.fields.author || "LifeBridge Guidance",
           publishedDate: item.fields.publishedDate || new Date().toISOString(),
           tags: tags,
-          slug: item.fields.slug || "",
+          slug: slugify(rawSlug),
         };
       });
 
@@ -248,14 +261,25 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
         // Use default
       }
       
-      const entries = await client.getEntries({
+      // Try exact slug match first (e.g. "spouse-dies-fidelity-accounts")
+      let entries = await client.getEntries({
         content_type: contentTypeToUse,
         "fields.slug": slug,
         limit: 1,
       });
 
+      // If no exact match, fetch all and find by URL-safe slug (handles Contentful slugs with spaces)
+      if (entries.items.length === 0) {
+        const allEntries = await client.getEntries({
+          content_type: contentTypeToUse,
+          limit: 500,
+        });
+        const match = allEntries.items.find((entry: any) => slugify(entry.fields?.slug || entry.fields?.title || "") === slug);
+        if (match) entries = { ...allEntries, items: [match] };
+      }
+
       if (entries.items.length > 0) {
-        console.log("[Contentful] Found blog post:", entries.items[0].fields.title);
+        console.log("[Contentful] Found blog post:", (entries.items[0] as any).fields.title);
         const item = entries.items[0] as any;
         
         // Ensure tags is always an array
@@ -272,6 +296,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
         // Handle content field - could be Rich Text object, string, or plain text
         const content = extractTextFromRichText(item.fields.content);
         
+        const rawSlug = item.fields.slug || item.fields.title || "";
         return {
           title: item.fields.title || "",
           description: item.fields.description || "",
@@ -279,7 +304,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
           author: item.fields.author || "LifeBridge Guidance",
           publishedDate: item.fields.publishedDate || new Date().toISOString(),
           tags: tags,
-          slug: item.fields.slug || "",
+          slug: slugify(rawSlug),
         };
       } else {
         console.log("[Contentful] No blog post found with slug:", slug);
@@ -294,6 +319,6 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
     }
   }
 
-  // Return local blog post from constants
-  return localBlogPosts.find((post) => post.slug === slug) || null;
+  // Return local blog post from constants (match by slug or slugified slug)
+  return localBlogPosts.find((post) => post.slug === slug || slugify(post.slug) === slug) || null;
 }
