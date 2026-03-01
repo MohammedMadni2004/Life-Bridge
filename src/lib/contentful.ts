@@ -1,7 +1,47 @@
 import contentful from "contentful";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 import { blogPosts as localBlogPosts, type BlogPost } from "../constants";
 
 const { createClient } = contentful;
+
+/** Escape HTML so plain text can be safely used inside HTML. */
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** Turn plain text (with \n\n paragraphs) into simple HTML. */
+function plainTextToHtml(text: string): string {
+  if (!text || typeof text !== "string") return "";
+  const escaped = escapeHtml(text.trim());
+  const paragraphs = escaped.split(/\n\n+/).filter((p) => p.length > 0);
+  if (paragraphs.length === 0) return "";
+  return paragraphs.map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("");
+}
+
+/**
+ * Convert Contentful content (Rich Text object or plain string) to HTML.
+ * Ensures all content is rendered and no blocks are dropped.
+ */
+function contentToHtml(content: any): string {
+  if (content == null) return "";
+  if (typeof content === "string") return plainTextToHtml(content);
+  if (typeof content !== "object") return "";
+  // Rich Text document: use official renderer so nothing is lost
+  try {
+    if (content.nodeType === "document" && Array.isArray(content.content)) {
+      return documentToHtmlString(content);
+    }
+    // Some APIs wrap the document
+    if (content.nodeType && content.content) return documentToHtmlString(content);
+  } catch (e) {
+    console.warn("[Contentful] Rich text to HTML failed, falling back to text extraction:", e);
+  }
+  return plainTextToHtml(extractTextFromRichText(content));
+}
 
 // Export BlogPost type
 export type { BlogPost };
@@ -97,12 +137,7 @@ const accessToken = import.meta.env.CONTENTFUL_ACCESS_TOKEN || import.meta.env.P
 const isContentfulConfigured = spaceId && accessToken;
 
 // Log configuration status (will show in build logs)
-if (typeof process !== 'undefined' && process.env) {
-  console.log("[Contentful Config Check]");
-  console.log("[Contentful Config Check] Space ID exists:", !!spaceId);
-  console.log("[Contentful Config Check] Access Token exists:", !!accessToken);
-  console.log("[Contentful Config Check] Is configured:", isContentfulConfigured);
-}
+
 
 // Create Contentful client only if configured
 let client: ReturnType<typeof createClient> | null = null;
@@ -188,8 +223,8 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
           }
         }
         
-        // Handle content field - could be Rich Text object, string, or plain text
-        const content = extractTextFromRichText(item.fields.content);
+        // Handle content field: Rich Text or string → HTML so nothing is dropped
+        const content = contentToHtml(item.fields.content);
         
         const rawSlug = item.fields.slug || item.fields.title || "";
         return {
@@ -293,8 +328,8 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
           }
         }
         
-        // Handle content field - could be Rich Text object, string, or plain text
-        const content = extractTextFromRichText(item.fields.content);
+        // Handle content field: Rich Text or string → HTML so nothing is dropped
+        const content = contentToHtml(item.fields.content);
         
         const rawSlug = item.fields.slug || item.fields.title || "";
         return {
@@ -320,5 +355,9 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
   }
 
   // Return local blog post from constants (match by slug or slugified slug)
-  return localBlogPosts.find((post) => post.slug === slug || slugify(post.slug) === slug) || null;
+  const local = localBlogPosts.find((post) => post.slug === slug || slugify(post.slug) === slug);
+  if (local) {
+    return { ...local, content: plainTextToHtml(local.content) };
+  }
+  return null;
 }
