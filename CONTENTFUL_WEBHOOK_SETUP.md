@@ -99,16 +99,20 @@ The current config is correct and ready to use!
    
    **URL:** Paste your Vercel Deploy Hook URL from Step 5
    
-   **Triggers:**
-   - ✅ Publish
-   - ✅ Unpublish
-   - ✅ Archive
-   - ✅ Unarchive
-   - ✅ Create
-   - ✅ Save
-   - ✅ Delete
+   **Triggers:** In the "Content Events" table:
    
-   **Content types:** Select `Blog Post` (or leave empty for all content types)
+   **IMPORTANT:** You need to check triggers for **Entry** (not just Content type)!
+   
+   - Find the **"Entry"** row in the table
+   - Check these boxes in the **Entry** row:
+     - ✅ **Publish** (required - triggers when you publish a blog post)
+     - ✅ **Unpublish** (recommended)
+     - ✅ **Create** (optional - triggers when you create new posts)
+     - ✅ **Save** (optional - triggers on any save)
+   
+   **Note:** Content type triggers only fire when you modify the content model, not when you publish entries. You MUST enable Entry triggers!
+   
+   **Content types:** Select your content type (e.g., `sOmthijng`) or leave empty for all content types
    
    **HTTP method:** `POST`
    
