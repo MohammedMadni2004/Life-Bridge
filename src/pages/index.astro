@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import LifeBridgeChat from "../components/LifeBridgeChat";
 
 const calendlyUrl = "https://calendly.com/lifebridgeguidance/30min";
 const contactEmail = "hi@lifebridgeguidance.com";
@@ -101,10 +102,11 @@ const contactEmail = "hi@lifebridgeguidance.com";
 					so you don't have to navigate this alone.
 				</p>
 
-				<!-- Chatbot UI (Static for now) -->
+				<!-- Chatbot Trigger (opens the real chat) -->
 				<div 
 					class="mb-10 w-full max-w-md bg-white/95 rounded-lg p-2 flex items-center shadow-lg border border-slate-200/60 opacity-0 animate-fade-in-up animation-delay-300 cursor-pointer overflow-hidden transition-transform hover:-translate-y-0.5 hover:shadow-xl" 
-					onclick="alert('The chat assistant will be available soon!')"
+					onclick="window.__openLifeBridgeChat && window.__openLifeBridgeChat()"
+					id="hero-chat-trigger"
 				>
 					<div class="pl-3 pr-2 py-2 flex items-center justify-center text-[#4a6b8a]">
 						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -539,6 +541,9 @@ const contactEmail = "hi@lifebridgeguidance.com";
 			</div>
 		</div>
 	</footer>
+
+	<!-- LifeBridge Chat Component -->
+	<LifeBridgeChat client:load />
 
 	<!-- Mobile Menu Toggle Script -->
 	<script>
