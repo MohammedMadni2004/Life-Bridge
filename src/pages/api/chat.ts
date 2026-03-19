@@ -115,7 +115,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const { messages } = await request.json();
+    const { messages, model } = await request.json();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return new Response(
@@ -141,7 +141,7 @@ export const POST: APIRoute = async ({ request }) => {
           "X-Title": "LifeBridge Guidance Agent",
         },
         body: JSON.stringify({
-          model: "anthropic/claude-sonnet-4.5",
+          model: model || "anthropic/claude-3.5-sonnet",
           messages: fullMessages,
           stream: true,
           temperature: 0.7,

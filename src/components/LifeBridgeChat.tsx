@@ -11,8 +11,14 @@ const WELCOME_MESSAGE: Message = {
     "I'm the LifeBridge Guidance Assistant. I'm here to help you navigate the practical steps that follow the loss of a loved one — with care, clarity, and compassion.\n\nYou can ask me about anything from immediate next steps, to financial accounts, insurance, documents, or what to prioritize right now.\n\n**How can I help you today?**",
 };
 
+export const MODELS = [
+  { id: "anthropic/claude-sonnet-4.5", name: "Claude 4 Sonnet" },
+  { id: "google/gemini-2.0-flash-001", name: "Gemini 2.0 " },
+];
+
 export default function LifeBridgeChat() {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -64,6 +70,7 @@ export default function LifeBridgeChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: messagesToSend.length > 0 ? messagesToSend : [{ role: "user", content: trimmed }],
+          model: selectedModel,
         }),
       });
 
@@ -271,25 +278,40 @@ export default function LifeBridgeChat() {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white/80 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
-              aria-label="Close chat"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            
+            <div className="flex items-center gap-3">
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="bg-white/10 text-white text-xs py-1 px-2 rounded border border-white/20 focus:outline-none focus:ring-1 focus:ring-white/50 cursor-pointer appearance-none"
+                title="Select AI Model"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                {MODELS.map((m) => (
+                  <option key={m.id} value={m.id} className="text-slate-800">
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-white/80 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
+                aria-label="Close chat"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
