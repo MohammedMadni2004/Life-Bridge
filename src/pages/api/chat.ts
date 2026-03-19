@@ -141,7 +141,7 @@ export const POST: APIRoute = async ({ request }) => {
           "X-Title": "LifeBridge Guidance Agent",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.0-flash-001",
+          model: "anthropic/claude-sonnet-4.5",
           messages: fullMessages,
           stream: true,
           temperature: 0.7,
