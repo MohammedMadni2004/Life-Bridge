@@ -11,10 +11,21 @@ const WELCOME_MESSAGE: Message = {
     "I'm the LifeBridge Guidance Assistant. I'm here to help you navigate the practical steps that follow the loss of a loved one — with care, clarity, and compassion.\n\nYou can ask me about anything from immediate next steps, to financial accounts, insurance, documents, or what to prioritize right now.\n\n**How can I help you today?**",
 };
 
-export const MODELS = [
+const MODELS = [
   { id: "anthropic/claude-sonnet-4.5", name: "Claude 4 Sonnet" },
   { id: "google/gemini-2.0-flash-001", name: "Gemini 2.0 " },
 ];
+
+// Strip markdown formatting for clean TTS output
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, "$1") // bold
+    .replace(/\*(.*?)\*/g, "$1")     // italic
+    .replace(/^##\s+/gm, "")        // headers
+    .replace(/^[•\-]\s+/gm, "")     // bullet points
+    .replace(/^\d+\.\s+/gm, "")     // numbered lists
+    .trim();
+}
 
 export default function LifeBridgeChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,8 +33,41 @@ export default function LifeBridgeChat() {
   const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Stop speech on unmount
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis?.cancel();
+    };
+  }, []);
+
+  const handleSpeak = (text: string, index: number) => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+
+    // If already speaking this message, stop it
+    if (speakingIndex === index) {
+      synth.cancel();
+      setSpeakingIndex(null);
+      return;
+    }
+
+    // Stop any current speech
+    synth.cancel();
+
+    const cleanText = stripMarkdown(text);
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 0.95;
+    utterance.pitch = 1;
+    utterance.onend = () => setSpeakingIndex(null);
+    utterance.onerror = () => setSpeakingIndex(null);
+
+    setSpeakingIndex(index);
+    synth.speak(utterance);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -322,7 +366,7 @@ export default function LifeBridgeChat() {
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13.5px] leading-relaxed ${
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-[13.5px] leading-relaxed relative group ${
                     msg.role === "user"
                       ? "bg-[#4a6b8a] text-white rounded-br-md"
                       : "bg-white text-[#4a5568] rounded-bl-md shadow-sm border border-slate-100"
@@ -331,7 +375,41 @@ export default function LifeBridgeChat() {
                   {msg.role === "assistant" ? (
                     <div className="space-y-0.5">
                       {msg.content ? (
-                        renderContent(msg.content)
+                        <>
+                          {renderContent(msg.content)}
+                          {/* TTS Speaker icon */}
+                          {!isLoading || i !== messages.length - 1 ? (
+                            <div className="absolute -bottom-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                              <button
+                                onClick={() => handleSpeak(msg.content, i)}
+                                className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${
+                                  speakingIndex === i
+                                    ? "bg-[#4a6b8a]/10 text-[#4a6b8a]"
+                                    : "bg-white text-slate-400 hover:text-[#4a6b8a] hover:bg-slate-50 border border-slate-100 shadow-sm"
+                                }`}
+                                title={speakingIndex === i ? "Stop speaking" : "Read aloud"}
+                              >
+                                {speakingIndex === i ? (
+                                  <>
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <rect x="6" y="6" width="12" height="12" rx="2" strokeWidth="2" />
+                                    </svg>
+                                    <span className="flex gap-0.5">
+                                      <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                                      <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                                      <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                                    </span>
+                                  </>
+                                ) : (
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                  </svg>
+                                )}
+                              </button>
+                            </div>
+                          ) : null}
+                          <div className={(!isLoading || i !== messages.length - 1) ? "mb-6" : ""} />
+                        </>
                       ) : isLoading && i === messages.length - 1 ? (
                         <div className="flex items-center gap-1.5 py-1">
                           <div className="w-2 h-2 bg-[#4a6b8a]/40 rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -346,7 +424,7 @@ export default function LifeBridgeChat() {
                 </div>
               </div>
             ))}
-            <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} className="pt-4" />
           </div>
 
           {/* Input */}
