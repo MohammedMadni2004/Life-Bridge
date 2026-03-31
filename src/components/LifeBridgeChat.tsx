@@ -379,7 +379,7 @@ export default function LifeBridgeChat() {
                           {renderContent(msg.content)}
                           {/* TTS Speaker icon */}
                           {!isLoading || i !== messages.length - 1 ? (
-                            <div className="absolute -bottom-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                            <div className="absolute -bottom-8 left-0 transition-opacity duration-200">
                               <button
                                 onClick={() => handleSpeak(msg.content, i)}
                                 className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${
