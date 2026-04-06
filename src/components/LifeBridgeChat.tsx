@@ -27,6 +27,13 @@ function stripMarkdown(text: string): string {
     .trim();
 }
 
+const TTS_VOICES = [
+  { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah" },
+  { id: "nPczCjzI2devNBz1zQrb", name: "Brian" },
+  { id: "cjVigY5qzO86Huf0OWal", name: "Eric" },
+  { id: "pFZP5JQG7iQjIQuC4Bku", name: "Lily" },
+];
+
 export default function LifeBridgeChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState(MODELS[0].id);
@@ -34,39 +41,76 @@ export default function LifeBridgeChat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
+  const [menuOpenIndex, setMenuOpenIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Stop speech on unmount
   useEffect(() => {
     return () => {
-      window.speechSynthesis?.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, []);
 
-  const handleSpeak = (text: string, index: number) => {
-    const synth = window.speechSynthesis;
-    if (!synth) return;
-
-    // If already speaking this message, stop it
-    if (speakingIndex === index) {
-      synth.cancel();
+  const handleSpeak = async (text: string, index: number, voiceId?: string) => {
+    // Stop if already playing this message and no new voice was selected
+    if (speakingIndex === index && !voiceId) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       setSpeakingIndex(null);
       return;
     }
 
     // Stop any current speech
-    synth.cancel();
-
-    const cleanText = stripMarkdown(text);
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
-    utterance.onend = () => setSpeakingIndex(null);
-    utterance.onerror = () => setSpeakingIndex(null);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
 
     setSpeakingIndex(index);
-    synth.speak(utterance);
+    setMenuOpenIndex(null); // Close menu when playing
+    const cleanText = stripMarkdown(text);
+
+    try {
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText, voiceId }),
+      });
+
+      if (!response.ok) {
+        console.error("Failed to generate speech");
+        setSpeakingIndex(null);
+        return;
+      }
+
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setSpeakingIndex(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      audio.onerror = () => {
+        setSpeakingIndex(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.error("Error playing TTS:", error);
+      setSpeakingIndex(null);
+    }
   };
 
   const scrollToBottom = () => {
@@ -380,32 +424,56 @@ export default function LifeBridgeChat() {
                           {/* TTS Speaker icon */}
                           {!isLoading || i !== messages.length - 1 ? (
                             <div className="absolute -bottom-8 left-0 transition-opacity duration-200">
-                              <button
-                                onClick={() => handleSpeak(msg.content, i)}
-                                className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${
-                                  speakingIndex === i
-                                    ? "bg-[#4a6b8a]/10 text-[#4a6b8a]"
-                                    : "bg-white text-slate-400 hover:text-[#4a6b8a] hover:bg-slate-50 border border-slate-100 shadow-sm"
-                                }`}
-                                title={speakingIndex === i ? "Stop speaking" : "Read aloud"}
-                              >
-                                {speakingIndex === i ? (
-                                  <>
+                              <div className="relative">
+                                <button
+                                  onClick={() => {
+                                    if (speakingIndex === i) {
+                                      handleSpeak(msg.content, i); // Stops speech if already playing
+                                    } else {
+                                      // Toggle dropdown if not playing
+                                      setMenuOpenIndex(menuOpenIndex === i ? null : i);
+                                    }
+                                  }}
+                                  className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${
+                                    speakingIndex === i || menuOpenIndex === i
+                                      ? "bg-[#4a6b8a]/10 text-[#4a6b8a]"
+                                      : "bg-white text-slate-400 hover:text-[#4a6b8a] hover:bg-slate-50 border border-slate-100 shadow-sm"
+                                  }`}
+                                  title={speakingIndex === i ? "Stop speaking" : "Choose voice"}
+                                >
+                                  {speakingIndex === i ? (
+                                    <>
+                                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <rect x="6" y="6" width="12" height="12" rx="2" strokeWidth="2" />
+                                      </svg>
+                                      <span className="flex gap-0.5">
+                                        <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                                        <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                                        <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                                      </span>
+                                    </>
+                                  ) : (
                                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <rect x="6" y="6" width="12" height="12" rx="2" strokeWidth="2" />
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                                     </svg>
-                                    <span className="flex gap-0.5">
-                                      <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                                      <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                                      <span className="w-1 h-1 bg-[#4a6b8a] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                                    </span>
-                                  </>
-                                ) : (
-                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                                  </svg>
+                                  )}
+                                </button>
+                                
+                                {/* Voice selection dropdown */}
+                                {menuOpenIndex === i && (
+                                  <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-md shadow-lg py-1 min-w-[120px] z-50">
+                                    {TTS_VOICES.map(voice => (
+                                      <button
+                                        key={voice.id}
+                                        onClick={() => handleSpeak(msg.content, i, voice.id)}
+                                        className="w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                                      >
+                                        Listen as <strong>{voice.name}</strong>
+                                      </button>
+                                    ))}
+                                  </div>
                                 )}
-                              </button>
+                              </div>
                             </div>
                           ) : null}
                           <div className={(!isLoading || i !== messages.length - 1) ? "mb-6" : ""} />
