@@ -27,12 +27,7 @@ function stripMarkdown(text: string): string {
     .trim();
 }
 
-const TTS_VOICES = [
-  { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah" },
-  { id: "nPczCjzI2devNBz1zQrb", name: "Brian" },
-  { id: "cjVigY5qzO86Huf0OWal", name: "Eric" },
-  { id: "pFZP5JQG7iQjIQuC4Bku", name: "Lily" },
-];
+const TTS_VOICE_ID = "pFZP5JQG7iQjIQuC4Bku"; // Lily
 
 export default function LifeBridgeChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +36,6 @@ export default function LifeBridgeChat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null);
-  const [menuOpenIndex, setMenuOpenIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,9 +51,9 @@ export default function LifeBridgeChat() {
     };
   }, []);
 
-  const handleSpeak = async (text: string, index: number, voiceId?: string) => {
-    // Stop if already playing this message and no new voice was selected
-    if (speakingIndex === index && !voiceId) {
+  const handleSpeak = async (text: string, index: number) => {
+    // Stop if already playing this message
+    if (speakingIndex === index) {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -75,14 +69,13 @@ export default function LifeBridgeChat() {
     }
 
     setSpeakingIndex(index);
-    setMenuOpenIndex(null); // Close menu when playing
     const cleanText = stripMarkdown(text);
 
     try {
       const response = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: cleanText, voiceId }),
+        body: JSON.stringify({ text: cleanText, voiceId: TTS_VOICE_ID }),
       });
 
       if (!response.ok) {
@@ -426,20 +419,13 @@ export default function LifeBridgeChat() {
                             <div className="absolute -bottom-8 left-0 transition-opacity duration-200">
                               <div className="relative">
                                 <button
-                                  onClick={() => {
-                                    if (speakingIndex === i) {
-                                      handleSpeak(msg.content, i); // Stops speech if already playing
-                                    } else {
-                                      // Toggle dropdown if not playing
-                                      setMenuOpenIndex(menuOpenIndex === i ? null : i);
-                                    }
-                                  }}
+                                  onClick={() => handleSpeak(msg.content, i)}
                                   className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-medium transition-colors ${
-                                    speakingIndex === i || menuOpenIndex === i
+                                    speakingIndex === i
                                       ? "bg-[#4a6b8a]/10 text-[#4a6b8a]"
                                       : "bg-white text-slate-400 hover:text-[#4a6b8a] hover:bg-slate-50 border border-slate-100 shadow-sm"
                                   }`}
-                                  title={speakingIndex === i ? "Stop speaking" : "Choose voice"}
+                                  title={speakingIndex === i ? "Stop speaking" : "Listen"}
                                 >
                                   {speakingIndex === i ? (
                                     <>
@@ -458,21 +444,6 @@ export default function LifeBridgeChat() {
                                     </svg>
                                   )}
                                 </button>
-                                
-                                {/* Voice selection dropdown */}
-                                {menuOpenIndex === i && (
-                                  <div className="absolute top-full left-0 mt-1 bg-white border border-slate-200 rounded-md shadow-lg py-1 min-w-[120px] z-50">
-                                    {TTS_VOICES.map(voice => (
-                                      <button
-                                        key={voice.id}
-                                        onClick={() => handleSpeak(msg.content, i, voice.id)}
-                                        className="w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
-                                      >
-                                        Listen as <strong>{voice.name}</strong>
-                                      </button>
-                                    ))}
-                                  </div>
-                                )}
                               </div>
                             </div>
                           ) : null}
