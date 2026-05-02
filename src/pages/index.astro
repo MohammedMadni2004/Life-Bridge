@@ -495,13 +495,13 @@ const contactEmail = "support@lifebridgeguidance.com";
 					>
 						Book a Free 15-Minute Call
 					</button>
-					<div class="flex items-center gap-2 text-[#4a5568]">
+					<div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-[#4a5568]">
 						<span>or email us:</span>
 						<a href={`mailto:${contactEmail}`} class="flex items-center gap-2 text-[#4a6b8a] hover:text-[#3a5570] transition-colors">
-							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
 							</svg>
-							{contactEmail}
+							<span class="break-all">{contactEmail}</span>
 						</a>
 					</div>
 				</div>
