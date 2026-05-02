@@ -95,15 +95,15 @@ export const POST: APIRoute = async ({ request, url }) => {
             <h1>Welcome to LifeBridge Guidance</h1>
           </div>
           <div class="content">
-            <p>Hi there,</p>
-            <p>Thank you so much for subscribing! We're thrilled to have you onboard.</p>
+            <p>Hello,</p>
+            <p>Taking the first step toward guidance and healing is often the hardest part, and we are truly glad you are here. Please know that you are not alone on this journey.</p>
             <p>As promised, here is your exclusive <strong>Step-by-Step Guide</strong>. We've packed it with actionable insights and strategies to help you get started immediately.</p>
             
             <div class="button-container">
               <a href="${pdfUrl}" class="button" target="_blank" rel="noopener noreferrer">Download Your PDF Guide</a>
             </div>
             
-            <p>If you have any questions or need further assistance, feel free to reply directly to this email.</p>
+            <p>We hope this guide brings you clarity and comfort as you move forward.</p>
             <p>Best regards,<br>The LifeBridge Guidance Team</p>
           </div>
           <div class="footer">
