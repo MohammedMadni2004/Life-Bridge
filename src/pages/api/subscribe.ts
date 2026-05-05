@@ -18,6 +18,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     // Determine the base URL for the PDF link based on the current request
     const baseUrl = `${url.protocol}//${url.host}`;
     const pdfUrl = `${baseUrl}/guide.pdf`; // Points to public/guide.pdf
+    const templateId= import.meta.env.RESEND_TEMPLATE_ID;
 
     try {
       const { data, error } = await resend.emails.send({
@@ -25,7 +26,7 @@ export const POST: APIRoute = async ({ request, url }) => {
         to: [email],
         subject: "Here is your Step-by-Step Guide!",
         template: {
-          id: '54069079-5f06-43d3-9b0b-fcbeea1fedd2',
+          id: templateId,
           variables: {
             pdfUrl: pdfUrl
           }
